@@ -1,5 +1,5 @@
 import { StyleSheet } from 'react-native';
-import { colors, shadows, spacing } from '../theme';
+import { colors, spacing } from '../theme';
 import { baseTagStyle } from '../tags';
 
 export const layoutStyles = StyleSheet.create({

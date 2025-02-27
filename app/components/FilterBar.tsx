@@ -1,7 +1,7 @@
-import React, { useEffect } from 'react';
+import React from 'react';
 import { ScrollView, TouchableOpacity, Text, StyleSheet, View, TouchableWithoutFeedback } from 'react-native';
 import { useState, useRef, useCallback } from 'react';
-import { TagType, getTagStyle, baseTagStyle } from '../styles/tags';
+import { TagType, getTagStyle } from '../styles/tags';
 import { dummyLibraries } from '../models/Library';
 import { Ionicons } from '@expo/vector-icons';
 import { FilterDropdown } from './FilterDropdown';

@@ -1,8 +1,7 @@
-// Base theme colors
 export const themeColors = {
   sage: {
-    900: '#2C3930', // Dark sage
-    800: '#3F4F44', // Medium sage
+    900: '#2C3930',
+    800: '#3F4F44',
     700: '#4A5D4E',
     600: '#5B705F',
     500: '#6B8270',
@@ -13,8 +12,8 @@ export const themeColors = {
     50: '#E8F1EA',
   },
   earth: {
-    900: '#7C5B42', // Dark earth
-    800: '#A27B5C', // Medium earth
+    900: '#7C5B42',
+    800: '#A27B5C',
     700: '#B38E6F',
     600: '#C4A182',
     500: '#D5B495',
@@ -63,7 +62,7 @@ export const themeColors = {
   cream: {
     900: '#B1AC9E',
     800: '#C4BEB0',
-    700: '#DCD7C9', // Base cream
+    700: '#DCD7C9',
     600: '#E3DFD3',
     500: '#EAE7DD',
     400: '#F1EFE7',
@@ -95,7 +94,6 @@ export const colors = {
   infoLight: '#E5F2F9',
 };
 
-// Update shadows to be more subtle and match the theme
 export const shadows = {
   sm: {
     shadowColor: colors.sage[900],
@@ -138,7 +136,6 @@ export const borderRadius = {
   full: 9999,
 };
 
-// Add gradient themes
 export const gradients = {
   primary: {
     colors: ['#2563eb', '#1d4ed8'] as const,

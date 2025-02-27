@@ -1,14 +1,14 @@
-import { ScrollView, Text, View, Image, StyleSheet, Dimensions, TouchableOpacity, SafeAreaView, Animated, useWindowDimensions, TouchableWithoutFeedback, Keyboard } from "react-native";
+import { ScrollView, Text, View, Image, TouchableOpacity, SafeAreaView, useWindowDimensions, TouchableWithoutFeedback, Keyboard } from "react-native";
 import { useState, useMemo, useEffect } from "react";
 import AsyncStorage from "@react-native-async-storage/async-storage";
-import { dummyLibraries, Library } from "./models/Library";
+import { dummyLibraries } from "./models/Library";
 import { SearchBar } from "./components/SearchBar";
 import { Ionicons } from '@expo/vector-icons';
 import { router } from "expo-router";
-import { TagType, getTagStyle, baseTagStyle } from './styles/tags';
+import { TagType, getTagStyle } from './styles/tags';
 import { FilterBar } from "./components/FilterBar";
 import { FILTER_CATEGORIES } from './components/FilterBar';
-import { colors, shadows, spacing, borderRadius } from './styles/theme';
+import { colors, spacing } from './styles/theme';
 import { layoutStyles } from './styles/components/layout';
 import { headerStyles } from './styles/components/header';
 import { cardStyles, createCardStyles } from './styles/components/card';

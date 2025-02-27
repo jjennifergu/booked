@@ -1,7 +1,7 @@
 import { View, Text, Image, StyleSheet, ScrollView } from "react-native";
 import { useLocalSearchParams } from "expo-router";
 import { dummyLibraries } from "../models/Library";
-import { TagType, getTagStyle, baseTagStyle } from '../styles/tags';
+import { getTagStyle, baseTagStyle } from '../styles/tags';
 
 export default function LibraryDetails() {
   const { id } = useLocalSearchParams<{ id: string }>();

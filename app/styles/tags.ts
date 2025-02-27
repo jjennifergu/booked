@@ -1,4 +1,3 @@
-import { colors } from './theme';
 import { themeColors } from './theme';
 
 export const TAG_STYLES = {
