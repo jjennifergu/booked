@@ -1,10 +1,18 @@
-import { ScrollView, Text, View, Image, StyleSheet, Dimensions, TouchableOpacity, SafeAreaView } from "react-native";
+import { ScrollView, Text, View, Image, StyleSheet, Dimensions, TouchableOpacity, SafeAreaView, Animated, useWindowDimensions, TouchableWithoutFeedback, Keyboard } from "react-native";
 import { useState, useMemo, useEffect } from "react";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { dummyLibraries, Library } from "./models/Library";
 import { SearchBar } from "./components/SearchBar";
 import { Ionicons } from '@expo/vector-icons';
 import { router } from "expo-router";
+import { TagType, getTagStyle, baseTagStyle } from './styles/tags';
+import { FilterBar } from "./components/FilterBar";
+import { FILTER_CATEGORIES } from './components/FilterBar';
+import { colors, shadows, spacing, borderRadius } from './styles/theme';
+import { layoutStyles } from './styles/components/layout';
+import { headerStyles } from './styles/components/header';
+import { cardStyles, createCardStyles } from './styles/components/card';
+import { typographyStyles } from './styles/components/typography';
 
 const RECENT_SEARCHES_KEY = "recent_searches";
 const MAX_RECENT_SEARCHES = 5;
@@ -13,6 +21,12 @@ export default function Index() {
   const [searchQuery, setSearchQuery] = useState("");
   const [recentSearches, setRecentSearches] = useState<string[]>([]);
   const [isGridView, setIsGridView] = useState(true);
+  const [selectedFilters, setSelectedFilters] = useState<Set<string>>(new Set());
+
+  const { width: windowWidth } = useWindowDimensions();
+  
+  const gridCardSize = (windowWidth - spacing.md * 3) / 2;
+  const listImageSize = Math.min(windowWidth * 0.3, 120);
 
   useEffect(() => {
     loadRecentSearches();
@@ -69,10 +83,27 @@ export default function Index() {
     router.push(`/library/${id}`);
   };
 
+  const handleToggleFilter = (filter: string, type: TagType) => {
+    setSelectedFilters(prev => {
+      const next = new Set(prev);
+      if (next.has(filter)) {
+        next.delete(filter);
+      } else {
+        Array.from(next).forEach(f => {
+          if (FILTER_CATEGORIES.find(cat => cat.type === type)?.values.includes(f)) {
+            next.delete(f);
+          }
+        });
+        next.add(filter);
+      }
+      return next;
+    });
+  };
+
   const filteredLibraries = useMemo(() => {
     const query = searchQuery.toLowerCase();
     return dummyLibraries.filter((library) => {
-      return (
+      const matchesSearch = 
         library.title.toLowerCase().includes(query) ||
         library.spaceInfo.description.toLowerCase().includes(query) ||
         library.spaceInfo.category.toLowerCase().includes(query) ||
@@ -81,211 +112,104 @@ export default function Index() {
         ) ||
         library.features.soundLevel.some(level => 
           level.toLowerCase().includes(query)
-        )
+        );
+
+      const matchesFilters = selectedFilters.size === 0 || Array.from(selectedFilters).every(filter => 
+        library.spaceInfo.category === filter ||
+        library.features.soundLevel.includes(filter) ||
+        library.features.spaceType.includes(filter)
       );
+
+      return matchesSearch && matchesFilters;
     });
-  }, [searchQuery]);
+  }, [searchQuery, selectedFilters]);
+
+  const dynamicStyles = createCardStyles(gridCardSize, listImageSize);
 
   return (
-    <SafeAreaView style={styles.safeArea}>
-      <ScrollView style={styles.container}>
-        <View style={styles.headerContainer}>
-          <Text style={styles.headerTitle}>Booked</Text>
-          <View style={styles.header}>
-            <SearchBar 
-              value={searchQuery}
-              onChangeText={handleSearch}
-              recentSearches={recentSearches}
-              onSelectRecent={handleSelectRecent}
-              onSubmit={handleSubmitSearch}
-              onClearRecent={handleClearRecent}
-            />
-            <TouchableOpacity 
-              style={styles.viewToggle}
-              onPress={() => setIsGridView(!isGridView)}
-            >
-              <Ionicons 
-                name={isGridView ? "list" : "grid"}
-                size={24} 
-                color="#007AFF"
+    <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
+      <SafeAreaView style={layoutStyles.safeArea}>
+        <View style={layoutStyles.mainContainer}>
+          <View style={headerStyles.headerContainer}>
+            <Text style={headerStyles.headerTitle}>Booked</Text>
+            <View style={headerStyles.header}>
+              <SearchBar 
+                value={searchQuery}
+                onChangeText={handleSearch}
+                recentSearches={recentSearches}
+                onSelectRecent={handleSelectRecent}
+                onSubmit={handleSubmitSearch}
+                onClearRecent={handleClearRecent}
               />
-            </TouchableOpacity>
-          </View>
-        </View>
-
-        <View style={[styles.container, isGridView ? styles.grid : styles.list]}>
-          {filteredLibraries.map((library) => (
-            <TouchableOpacity 
-              key={library.id}
-              onPress={() => handlePressLibrary(library.id)}
-            >
-              <View 
-                style={[
-                  styles.card,
-                  isGridView ? styles.gridCard : styles.listCard
-                ]}
+              <TouchableOpacity 
+                style={headerStyles.viewToggle}
+                onPress={() => setIsGridView(!isGridView)}
               >
-                <Image
-                  source={{ uri: library.imageUrl }}
-                  style={[
-                    styles.image,
-                    isGridView ? styles.gridImage : styles.listImage
-                  ]}
-                  defaultSource={require('../assets/images/placeholder.svg')}
+                <Ionicons 
+                  name={isGridView ? "list" : "grid"}
+                  size={24} 
+                  color={colors.primary}
                 />
-                <View style={styles.cardContent}>
-                  <Text style={styles.title}>{library.title}</Text>
-                  <Text style={styles.location}>{library.spaceInfo.library}</Text>
-                  {!isGridView && (
-                    <Text 
-                      style={styles.description} 
-                      numberOfLines={3}
-                    >
-                      {library.spaceInfo.description}
-                    </Text>
-                  )}
-                  <View style={styles.tags}>
-                    <Text style={styles.tag}>{library.spaceInfo.category}</Text>
-                    <Text style={styles.tag}>{library.features.soundLevel[0]}</Text>
+              </TouchableOpacity>
+            </View>
+            <FilterBar
+              selectedFilters={selectedFilters}
+              onToggleFilter={handleToggleFilter}
+            />
+          </View>
+
+          <ScrollView style={layoutStyles.scrollContent}>
+            <View style={[layoutStyles.container, isGridView ? layoutStyles.grid : layoutStyles.list]}>
+              {filteredLibraries.map((library) => (
+                <TouchableOpacity 
+                  key={library.id}
+                  onPress={() => handlePressLibrary(library.id)}
+                >
+                  <View 
+                    style={[
+                      cardStyles.card,
+                      isGridView ? dynamicStyles.gridCard : cardStyles.listCard
+                    ]}
+                  >
+                    <View style={isGridView ? null : dynamicStyles.listImageContainer}>
+                      <Image
+                        source={{ uri: library.imageUrl }}
+                        style={
+                          library.imageUrl ? 
+                            (isGridView ? dynamicStyles.gridImage : dynamicStyles.listImage) : 
+                            (isGridView ? dynamicStyles.gridPlaceholder : dynamicStyles.listPlaceholder)
+                        }
+                        defaultSource={require('../assets/images/placeholder.png')}
+                        resizeMode={library.imageUrl ? "cover" : "contain"}
+                      />
+                    </View>
+                    <View style={cardStyles.cardContent}>
+                      <Text style={typographyStyles.title}>{library.title}</Text>
+                      <Text style={typographyStyles.location}>{library.spaceInfo.library}</Text>
+                      {!isGridView && (
+                        <Text 
+                          style={typographyStyles.description} 
+                          numberOfLines={3}
+                        >
+                          {library.spaceInfo.description}
+                        </Text>
+                      )}
+                      <View style={layoutStyles.tags}>
+                        <Text style={[layoutStyles.tag, getTagStyle('category')]}>
+                          {library.spaceInfo.category}
+                        </Text>
+                        <Text style={[layoutStyles.tag, getTagStyle('soundLevel')]}>
+                          {library.features.soundLevel[0]}
+                        </Text>
+                      </View>
+                    </View>
                   </View>
-                </View>
-              </View>
-            </TouchableOpacity>
-          ))}
+                </TouchableOpacity>
+              ))}
+            </View>
+          </ScrollView>
         </View>
-      </ScrollView>
-    </SafeAreaView>
+      </SafeAreaView>
+    </TouchableWithoutFeedback>
   );
 }
-
-const SCREEN_WIDTH = Dimensions.get('window').width;
-const GRID_CARD_SIZE = (SCREEN_WIDTH / 2) - 16;
-
-const styles = StyleSheet.create({
-  safeArea: {
-    flex: 1,
-    backgroundColor: 'white',
-  },
-  container: {
-    flex: 1,
-    backgroundColor: '#f5f5f5',
-  },
-  headerContainer: {
-    backgroundColor: 'white',
-    borderBottomWidth: 1,
-    borderBottomColor: '#e0e0e0',
-    paddingTop: 8,
-    paddingBottom: 8,
-    paddingLeft: 8,
-  },
-  headerTitle: {
-    fontSize: 40,
-    fontWeight: '900',
-    padding: 16,
-    color: '#1a1a1a',
-    letterSpacing: -1.5,
-    fontFamily: 'System',
-    textShadowColor: 'rgba(0, 0, 0, 0.1)',
-    textShadowOffset: { width: 1, height: 1 },
-    textShadowRadius: 2,
-  },
-  header: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    backgroundColor: 'white',
-    borderBottomWidth: 1,
-    borderBottomColor: '#e0e0e0',
-  },
-  viewToggle: {
-    padding: 16,
-    width: 56,
-  },
-  grid: {
-    flexDirection: 'row',
-    flexWrap: 'wrap',
-    justifyContent: 'space-between',
-    padding: 8,
-  },
-  list: {
-    padding: 8,
-  },
-  gridCard: {
-    width: GRID_CARD_SIZE,
-    height: GRID_CARD_SIZE,
-    marginBottom: 16,
-    overflow: 'hidden',
-  },
-  listCard: {
-    width: '100%',
-    marginBottom: 16,
-    flexDirection: 'row',
-    overflow: 'hidden',
-  },
-  gridImage: {
-    width: '100%',
-    height: GRID_CARD_SIZE * 0.5,
-    resizeMode: 'cover',
-  },
-  listImage: {
-    width: 120,
-    height: 120,
-    borderTopLeftRadius: 12,
-    borderBottomLeftRadius: 12,
-    borderTopRightRadius: 0,
-    resizeMode: 'cover',
-  },
-  card: {
-    backgroundColor: 'white',
-    borderRadius: 12,
-    width: Dimensions.get('window').width / 2 - 16,
-    marginBottom: 16,
-    shadowColor: '#000',
-    shadowOffset: { width: 0, height: 2 },
-    shadowOpacity: 0.1,
-    shadowRadius: 4,
-    elevation: 3,
-  },
-  image: {
-    width: '100%',
-    height: 120,
-    borderTopLeftRadius: 12,
-    borderTopRightRadius: 12,
-    resizeMode: 'cover',
-  },
-  cardContent: {
-    padding: 12,
-    flex: 1,
-  },
-  title: {
-    fontSize: 14,
-    fontWeight: 'bold',
-    marginBottom: 4,
-    flexWrap: 'wrap',
-  },
-  location: {
-    fontSize: 12,
-    color: '#666',
-    marginBottom: 4,
-    flexWrap: 'wrap',
-  },
-  description: {
-    fontSize: 11,
-    color: '#666',
-    marginBottom: 8,
-    flexWrap: 'wrap',
-  },
-  tags: {
-    flexDirection: 'row',
-    flexWrap: 'wrap',
-    gap: 4,
-    marginTop: 'auto',
-  },
-  tag: {
-    fontSize: 9,
-    backgroundColor: '#e0e0e0',
-    paddingHorizontal: 6,
-    paddingVertical: 3,
-    borderRadius: 12,
-    color: '#666',
-  },
-});

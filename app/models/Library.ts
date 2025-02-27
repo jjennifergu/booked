@@ -37,8 +37,7 @@ export const dummyLibraries: Library[] = [
       spaceFeatures: ["DTEN monitor/Zoom"],
       spaceType: ["Study and Talk with a Group"],
       audienceTypes: ["Faculty", "Graduate", "Staff", "Undergraduate"]
-    },
-    imageUrl: "https://example.com/placeholder-image.jpg"
+    }
   },
   {
     id: 16613,
@@ -77,8 +76,7 @@ export const dummyLibraries: Library[] = [
       spaceFeatures: ["Computer Workstations", "Printing Services", "24/7 Access"],
       spaceType: ["Individual Study", "Computer Work"],
       audienceTypes: ["Undergraduate", "Graduate"]
-    },
-    imageUrl: "https://example.com/placeholder-image-3.jpg"
+    }
   },
   {
     id: 16615,
@@ -97,8 +95,7 @@ export const dummyLibraries: Library[] = [
       spaceFeatures: ["Traditional Decor", "Table Lamps"],
       spaceType: ["Individual Study"],
       audienceTypes: ["Law Students", "Graduate", "Faculty"]
-    },
-    imageUrl: "https://example.com/placeholder-image-4.jpg"
+    }
   },
   {
     id: 16616,
@@ -117,8 +114,7 @@ export const dummyLibraries: Library[] = [
       spaceFeatures: ["3D Printers", "Laser Cutters", "Design Software"],
       spaceType: ["Creative Work", "Group Projects"],
       audienceTypes: ["Engineering Students", "Faculty", "Staff"]
-    },
-    imageUrl: "https://example.com/placeholder-image-5.jpg"
+    }
   },
   {
     id: 16617,
@@ -137,8 +133,7 @@ export const dummyLibraries: Library[] = [
       spaceFeatures: ["Food Allowed", "Coffee Service", "WiFi"],
       spaceType: ["Casual Study", "Social Space"],
       audienceTypes: ["All Campus"]
-    },
-    imageUrl: "https://example.com/placeholder-image-6.jpg"
+    }
   },
   {
     id: 16618,
@@ -157,8 +152,7 @@ export const dummyLibraries: Library[] = [
       spaceFeatures: ["Audio Equipment", "Sound Isolation"],
       spaceType: ["Individual Study", "Music Practice"],
       audienceTypes: ["Music Students", "Faculty"]
-    },
-    imageUrl: "https://example.com/placeholder-image-7.jpg"
+    }
   },
   {
     id: 16619,
@@ -177,7 +171,6 @@ export const dummyLibraries: Library[] = [
       spaceFeatures: ["Projector", "Whiteboard", "Conference Phone"],
       spaceType: ["Group Meetings", "Presentations"],
       audienceTypes: ["All Campus"]
-    },
-    imageUrl: "https://example.com/placeholder-image-8.jpg"
+    }
   }
 ]; 

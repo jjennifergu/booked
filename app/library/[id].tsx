@@ -1,6 +1,7 @@
 import { View, Text, Image, StyleSheet, ScrollView } from "react-native";
 import { useLocalSearchParams } from "expo-router";
 import { dummyLibraries } from "../models/Library";
+import { TagType, getTagStyle, baseTagStyle } from '../styles/tags';
 
 export default function LibraryDetails() {
   const { id } = useLocalSearchParams<{ id: string }>();
@@ -10,11 +11,14 @@ export default function LibraryDetails() {
 
   return (
     <ScrollView style={styles.container}>
-      <Image
-        source={{ uri: library.imageUrl }}
-        style={styles.image}
-        defaultSource={require('../../assets/images/placeholder.svg')}
-      />
+      <View style={styles.imageContainer}>
+        <Image
+          source={{ uri: library.imageUrl }}
+          style={library.imageUrl ? styles.image : styles.placeholderImage}
+          defaultSource={require('../../assets/images/placeholder.png')}
+          resizeMode={library.imageUrl ? "cover" : "contain"}
+        />
+      </View>
       <View style={styles.content}>
         <Text style={styles.title}>{library.title}</Text>
         <Text style={styles.location}>{library.spaceInfo.library}</Text>
@@ -24,7 +28,9 @@ export default function LibraryDetails() {
           <Text style={styles.sectionTitle}>Features</Text>
           <View style={styles.tags}>
             {library.features.spaceFeatures.map((feature, index) => (
-              <Text key={index} style={styles.tag}>{feature}</Text>
+              <Text key={index} style={[styles.tag, getTagStyle('spaceFeatures')]}>
+                {feature}
+              </Text>
             ))}
           </View>
         </View>
@@ -33,7 +39,9 @@ export default function LibraryDetails() {
           <Text style={styles.sectionTitle}>Sound Level</Text>
           <View style={styles.tags}>
             {library.features.soundLevel.map((level, index) => (
-              <Text key={index} style={styles.tag}>{level}</Text>
+              <Text key={index} style={[styles.tag, getTagStyle('soundLevel')]}>
+                {level}
+              </Text>
             ))}
           </View>
         </View>
@@ -42,7 +50,9 @@ export default function LibraryDetails() {
           <Text style={styles.sectionTitle}>Space Type</Text>
           <View style={styles.tags}>
             {library.features.spaceType.map((type, index) => (
-              <Text key={index} style={styles.tag}>{type}</Text>
+              <Text key={index} style={[styles.tag, getTagStyle('spaceType')]}>
+                {type}
+              </Text>
             ))}
           </View>
         </View>
@@ -51,7 +61,9 @@ export default function LibraryDetails() {
           <Text style={styles.sectionTitle}>Available For</Text>
           <View style={styles.tags}>
             {library.features.audienceTypes.map((type, index) => (
-              <Text key={index} style={styles.tag}>{type}</Text>
+              <Text key={index} style={[styles.tag, getTagStyle('audienceTypes')]}>
+                {type}
+              </Text>
             ))}
           </View>
         </View>
@@ -70,10 +82,21 @@ const styles = StyleSheet.create({
     flex: 1,
     backgroundColor: 'white',
   },
-  image: {
+  imageContainer: {
     width: '100%',
     height: 400,
-    resizeMode: 'cover',
+    backgroundColor: 'white',
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
+  image: {
+    width: '100%',
+    height: '100%',
+  },
+  placeholderImage: {
+    flex: 1,
+    width: 100,
+    resizeMode: 'contain',
   },
   content: {
     padding: 16,
@@ -109,13 +132,13 @@ const styles = StyleSheet.create({
     gap: 8,
   },
   tag: {
-    fontSize: 14,
-    backgroundColor: '#f0f0f0',
-    paddingHorizontal: 12,
-    paddingVertical: 6,
-    borderRadius: 16,
-    color: '#666',
+    ...baseTagStyle,
   },
+  categoryTag: getTagStyle('category'),
+  soundLevelTag: getTagStyle('soundLevel'),
+  spaceTypeTag: getTagStyle('spaceType'),
+  spaceFeaturesTag: getTagStyle('spaceFeatures'),
+  audienceTypesTag: getTagStyle('audienceTypes'),
   reservationType: {
     fontSize: 16,
     color: '#333',
