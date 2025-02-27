@@ -1,5 +1,6 @@
 import { StyleSheet } from 'react-native';
 import { colors, shadows, spacing, borderRadius } from '../theme';
+import { baseTagStyle } from '../tags';
 
 export const createCardStyles = (gridCardSize: number, listImageSize: number) => ({
   gridCard: {
@@ -47,29 +48,51 @@ export const createCardStyles = (gridCardSize: number, listImageSize: number) =>
 });
 
 export const cardStyles = StyleSheet.create({
-  listCard: {
-    width: '100%',
-    marginBottom: spacing.md,
-    flexDirection: 'row',
-    backgroundColor: colors.white,
-    borderRadius: borderRadius.lg,
-    overflow: 'hidden',
-    borderWidth: 1,
-    borderColor: colors.cream[200],
-    shadowColor: colors.sage[900],
-    shadowOffset: { width: 0, height: 2 },
-    shadowOpacity: 0.05,
-    shadowRadius: 3,
-    elevation: 1,
-  },
   card: {
     backgroundColor: colors.white,
     borderRadius: borderRadius.lg,
-    overflow: 'hidden',
+    overflow: 'hidden' as const,
+    ...shadows.md,
+  },
+  listCard: {
+    width: '100%',
+    marginBottom: spacing.md,
+    flexDirection: 'row' as const,
+    backgroundColor: colors.white,
+    borderRadius: borderRadius.lg,
+    overflow: 'hidden' as const,
+    ...shadows.md,
   },
   cardContent: {
     padding: spacing.md,
     gap: spacing.xs,
     flex: 1,
+  },
+  title: {
+    fontSize: 16,
+    fontWeight: '600',
+    color: colors.text,
+  },
+  location: {
+    fontSize: 14,
+    color: colors.textMuted,
+  },
+  description: {
+    fontSize: 14,
+    color: colors.sage[600],
+    lineHeight: 20,
+  },
+  tags: {
+    flexDirection: 'row',
+    flexWrap: 'wrap',
+    gap: spacing.xs,
+    marginTop: spacing.sm,
+  },
+  tag: {
+    ...baseTagStyle,
+    fontSize: 9,
+    paddingHorizontal: 6,
+    paddingVertical: 3,
+    borderRadius: 12,
   },
 }); 

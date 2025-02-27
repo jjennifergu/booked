@@ -1,11 +1,12 @@
 import React from 'react';
-import { ScrollView, TouchableOpacity, Text, StyleSheet, View, TouchableWithoutFeedback } from 'react-native';
+import { ScrollView, TouchableOpacity, Text, View } from 'react-native';
 import { useState, useRef, useCallback } from 'react';
 import { TagType, getTagStyle } from '../styles/tags';
 import { dummyLibraries } from '../models/Library';
 import { Ionicons } from '@expo/vector-icons';
 import { FilterDropdown } from './FilterDropdown';
-import { colors, shadows, spacing, borderRadius } from '../styles/theme';
+import { colors } from '../styles/theme';
+import { filterStyles as styles } from '../styles/components/filter';
 
 type FilterCategory = {
   type: TagType;
@@ -152,45 +153,4 @@ export function FilterBar({ selectedFilters, onToggleFilter }: FilterBarProps) {
       )}
     </View>
   );
-}
-
-const styles = StyleSheet.create({
-  wrapper: {
-    position: 'relative',
-    zIndex: 2,
-  },
-  dropdownContainer: {
-    position: 'absolute',
-    top: 0,
-    left: 0,
-    right: 0,
-    zIndex: 1,
-  },
-  container: {
-    maxHeight: 40,
-    marginTop: spacing.md,
-  },
-  content: {
-    paddingHorizontal: spacing.md,
-    gap: spacing.sm,
-  },
-  filterContainer: {
-    position: 'relative',
-  },
-  filterButton: {
-    backgroundColor: colors.white,
-    borderRadius: borderRadius.full,
-    ...shadows.sm,
-  },
-  filterText: {
-    fontSize: 14,
-    paddingHorizontal: spacing.lg,
-    paddingVertical: spacing.sm,
-    borderRadius: borderRadius.full,
-    flexDirection: 'row',
-    alignItems: 'center',
-  },
-  icon: {
-    marginLeft: spacing.sm,
-  },
-}); 
+} 

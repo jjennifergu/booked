@@ -1,7 +1,8 @@
 import React from 'react';
 import { View, Text, TouchableOpacity, StyleSheet, ScrollView, TouchableWithoutFeedback } from 'react-native';
 import { TagType, getTagStyle } from '../styles/tags';
-import { colors, shadows, spacing, borderRadius } from '../styles/theme';
+import { colors } from '../styles/theme';
+import { filterDropdownStyles as styles } from '../styles/components/filter';
 
 interface FilterDropdownProps {
   visible: boolean;
@@ -96,34 +97,3 @@ export function FilterDropdown({
     </>
   );
 }
-
-const styles = StyleSheet.create({
-  overlay: {
-    ...StyleSheet.absoluteFillObject,
-    backgroundColor: 'transparent',
-  },
-  dropdown: {
-    position: 'absolute',
-    backgroundColor: colors.white,
-    borderRadius: borderRadius.lg,
-    ...shadows.lg,
-    minWidth: 180,
-    maxHeight: 300,
-    overflow: 'hidden',
-    zIndex: 1000,
-    marginTop: -4,
-  },
-  scrollView: {
-    maxHeight: 200,
-  },
-  item: {
-    padding: spacing.sm,
-    borderBottomWidth: 1,
-    borderBottomColor: colors.cream[300],
-  },
-  text: {
-    fontSize: 13,
-    color: colors.text,
-    textAlign: 'center',
-  },
-}); 

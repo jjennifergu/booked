@@ -1,8 +1,10 @@
 import React, { useRef } from 'react';
-import { Animated, TouchableOpacity, View, Image, Text, StyleSheet } from 'react-native';
+import { Animated, TouchableOpacity, View, Image, Text } from 'react-native';
 import { colors, shadows, spacing, borderRadius } from '../styles/theme';
-import { Library } from '../models/Library';
+import { Library, getLibraryImage } from '../models/Library';
 import { getTagStyle, baseTagStyle } from '../styles/tags';
+import { Link } from 'expo-router';
+import { cardStyles } from '../styles/components/card';
 
 interface LibraryCardProps {
   library: Library;
@@ -71,102 +73,54 @@ export function LibraryCard({ library, onPress, isGridView, gridCardSize = 0, li
   };
 
   return (
-    <TouchableOpacity
-      activeOpacity={1}
-      onPress={onPress}
-      onPressIn={handlePressIn}
-      onPressOut={handlePressOut}
-    >
-      <Animated.View 
-        style={[
-          styles.card,
-          isGridView ? dynamicStyles.gridCard : styles.listCard,
-          { transform: [{ scale: scaleAnim }] }
-        ]}
+    <Link href={`/library/${library.slug}`}>
+      <TouchableOpacity
+        activeOpacity={1}
+        onPress={onPress}
+        onPressIn={handlePressIn}
+        onPressOut={handlePressOut}
       >
-        <View style={isGridView ? null : dynamicStyles.listImageContainer}>
-          <Image
-            source={{ uri: library.imageUrl }}
-            style={
-              library.imageUrl ? 
-                (isGridView ? dynamicStyles.gridImage : dynamicStyles.listImage) : 
-                (isGridView ? dynamicStyles.gridPlaceholder : dynamicStyles.listPlaceholder)
-            }
-            defaultSource={require('../../assets/images/placeholder.png')}
-            resizeMode={library.imageUrl ? "cover" : "contain"}
-          />
-        </View>
-        <View style={styles.cardContent}>
-          <Text style={styles.title}>{library.title}</Text>
-          <Text style={styles.location}>{library.spaceInfo.library}</Text>
-          {!isGridView && (
-            <Text 
-              style={styles.description} 
-              numberOfLines={3}
-            >
-              {library.spaceInfo.description}
-            </Text>
-          )}
-          <View style={styles.tags}>
-            <Text style={[styles.tag, getTagStyle('category')]}>
-              {library.spaceInfo.category}
-            </Text>
-            <Text style={[styles.tag, getTagStyle('soundLevel')]}>
-              {library.features.soundLevel[0]}
-            </Text>
+        <Animated.View 
+          style={[
+            cardStyles.card,
+            isGridView ? dynamicStyles.gridCard : cardStyles.listCard,
+            { transform: [{ scale: scaleAnim }] }
+          ]}
+        >
+          <View style={isGridView ? null : dynamicStyles.listImageContainer}>
+            <Image
+              source={{ uri: getLibraryImage(library) }}
+              style={
+                library.imageUrl ? 
+                  (isGridView ? dynamicStyles.gridImage : dynamicStyles.listImage) : 
+                  (isGridView ? dynamicStyles.gridPlaceholder : dynamicStyles.listPlaceholder)
+              }
+              defaultSource={require('../../assets/images/placeholder.png')}
+              resizeMode={library.imageUrl ? "cover" : "contain"}
+            />
           </View>
-        </View>
-      </Animated.View>
-    </TouchableOpacity>
+          <View style={cardStyles.cardContent}>
+            <Text style={cardStyles.title}>{library.title}</Text>
+            <Text style={cardStyles.location}>{library.spaceInfo.library}</Text>
+            {!isGridView && (
+              <Text 
+                style={cardStyles.description} 
+                numberOfLines={3}
+              >
+                {library.spaceInfo.description}
+              </Text>
+            )}
+            <View style={cardStyles.tags}>
+              <Text style={[cardStyles.tag, getTagStyle('category')]}>
+                {library.spaceInfo.category}
+              </Text>
+              <Text style={[cardStyles.tag, getTagStyle('soundLevel')]}>
+                {library.features.soundLevel[0]}
+              </Text>
+            </View>
+          </View>
+        </Animated.View>
+      </TouchableOpacity>
+    </Link>
   );
-}
-
-const styles = StyleSheet.create({
-  card: {
-    backgroundColor: colors.white,
-    borderRadius: borderRadius.lg,
-    overflow: 'hidden',
-    ...shadows.md,
-  },
-  listCard: {
-    width: '100%',
-    marginBottom: spacing.md,
-    flexDirection: 'row',
-    backgroundColor: colors.white,
-    borderRadius: borderRadius.lg,
-    overflow: 'hidden',
-    ...shadows.md,
-  },
-  cardContent: {
-    padding: spacing.md,
-    gap: spacing.xs,
-    flex: 1,
-  },
-  title: {
-    fontSize: 16,
-    fontWeight: '600',
-    color: colors.text,
-  },
-  location: {
-    fontSize: 14,
-    color: colors.textMuted,
-  },
-  description: {
-    fontSize: 14,
-    color: colors.sage[600],
-    lineHeight: 20,
-  },
-  tags: {
-    flexDirection: 'row',
-    flexWrap: 'wrap',
-    gap: spacing.xs,
-    marginTop: spacing.sm,
-  },
-  tag: {
-    ...baseTagStyle,
-    fontSize: 9,
-    paddingHorizontal: 6,
-    paddingVertical: 3,
-    borderRadius: 12,
-  },
-}); 
+} 
