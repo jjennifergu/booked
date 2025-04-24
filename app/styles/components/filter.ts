@@ -19,6 +19,7 @@ export const filterStyles = StyleSheet.create({
   },
   content: {
     paddingHorizontal: spacing.md,
+    paddingRight: 48 + spacing.sm,
     gap: spacing.sm,
   },
   filterContainer: {
@@ -27,6 +28,8 @@ export const filterStyles = StyleSheet.create({
   filterButton: {
     backgroundColor: colors.white,
     borderRadius: borderRadius.full,
+    marginTop: spacing.xs,
+    marginBottom: spacing.xs,
     ...shadows.sm,
   },
   filterText: {
@@ -39,6 +42,19 @@ export const filterStyles = StyleSheet.create({
   },
   icon: {
     marginLeft: spacing.sm,
+  },
+  clearButton: {
+    position: 'absolute',
+    right: spacing.md,
+    top: spacing.md + spacing.xs,
+    backgroundColor: colors.white,
+    borderRadius: borderRadius.full,
+    width: 32,
+    height: 32,
+    justifyContent: 'center',
+    alignItems: 'center',
+    ...shadows.sm,
+    zIndex: 3,
   },
 });
 

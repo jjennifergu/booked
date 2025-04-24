@@ -2,11 +2,11 @@ import React from 'react';
 import { ScrollView, TouchableOpacity, Text, View } from 'react-native';
 import { useState, useRef, useCallback } from 'react';
 import { TagType, getTagStyle } from '../styles/tags';
-import { dummyLibraries } from '../models/Library';
 import { Ionicons } from '@expo/vector-icons';
 import { FilterDropdown } from './FilterDropdown';
 import { colors } from '../styles/theme';
 import { filterStyles as styles } from '../styles/components/filter';
+import { Library } from '../models/Library';
 
 type FilterCategory = {
   type: TagType;
@@ -15,44 +15,58 @@ type FilterCategory = {
 
 const getUniqueValues = (arr: string[]): string[] => [...new Set(arr)];
 
-export const FILTER_CATEGORIES: FilterCategory[] = [
-  {
-    type: 'category',
-    values: getUniqueValues(dummyLibraries.map(lib => lib.spaceInfo.category))
-  },
-  {
-    type: 'soundLevel',
-    values: getUniqueValues(dummyLibraries.flatMap(lib => lib.features.soundLevel))
-  },
-  {
-    type: 'spaceType',
-    values: getUniqueValues(dummyLibraries.flatMap(lib => lib.features.spaceType))
-  },
-  {
-    type: 'spaceFeatures',
-    values: getUniqueValues(dummyLibraries.flatMap(lib => lib.features.spaceFeatures))
-  },
-  {
-    type: 'audienceTypes',
-    values: getUniqueValues(dummyLibraries.flatMap(lib => lib.features.audienceTypes))
-  }
-];
-
-const formatCategoryName = (name: string): string => {
-  return name
-    .replace(/([A-Z])/g, ' $1').trim()
-    .replace(/^./, str => str.toUpperCase());
-};
-
 interface FilterBarProps {
   selectedFilters: Set<string>;
   onToggleFilter: (filter: string, type: TagType) => void;
+  libraries: Library[];
 }
 
-export function FilterBar({ selectedFilters, onToggleFilter }: FilterBarProps) {
+export function FilterBar({ selectedFilters, onToggleFilter, libraries }: FilterBarProps) {
   const [openCategory, setOpenCategory] = useState<TagType | null>(null);
   const [dropdownPosition, setDropdownPosition] = useState({ x: 0, y: 0 });
   const filterRefs = useRef<{ [key: string]: View | null }>({});
+
+  const FILTER_CATEGORIES: FilterCategory[] = [
+    {
+      type: 'category',
+      values: getUniqueValues(libraries.map(lib => lib.spaceInfo.category))
+    },
+    {
+      type: 'reservationType',
+      values: getUniqueValues(libraries.map(lib => lib.spaceInfo.reservationType))
+    },
+    {
+      type: 'soundLevel',
+      values: getUniqueValues(libraries.flatMap(lib => lib.features.soundLevel))
+    },
+    {
+      type: 'spaceType',
+      values: getUniqueValues(libraries.flatMap(lib => lib.features.spaceType))
+    },
+    {
+      type: 'spaceFeatures',
+      values: getUniqueValues(libraries.flatMap(lib => lib.features.spaceFeatures))
+    },
+    {
+      type: 'audienceTypes',
+      values: getUniqueValues(libraries.flatMap(lib => lib.features.audienceTypes))
+    },
+  ] as const;
+
+  const formatCategoryName = (name: string): string => {
+    return name
+      .replace(/([A-Z])/g, ' $1').trim()
+      .replace(/^./, str => str.toUpperCase());
+  };
+
+  const handleClearAll = () => {
+    Array.from(selectedFilters).forEach(filter => {
+      const category = FILTER_CATEGORIES.find(cat => cat.values.includes(filter));
+      if (category) {
+        onToggleFilter(filter, category.type);
+      }
+    });
+  };
 
   const handleCategoryPress = useCallback((category: TagType) => {
     const filterRef = filterRefs.current[category];
@@ -137,6 +151,14 @@ export function FilterBar({ selectedFilters, onToggleFilter }: FilterBarProps) {
           );
         })}
       </ScrollView>
+      {selectedFilters.size > 0 && (
+        <TouchableOpacity
+          onPress={handleClearAll}
+          style={styles.clearButton}
+        >
+          <Ionicons name="close" size={16} color={colors.error} />
+        </TouchableOpacity>
+      )}
       {selectedCategory && (
         <View style={styles.dropdownContainer}>
           <FilterDropdown

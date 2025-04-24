@@ -1,18 +1,18 @@
-import { ScrollView, Text, View, Image, TouchableOpacity, SafeAreaView, useWindowDimensions, TouchableWithoutFeedback, Keyboard } from "react-native";
+import { ScrollView, Text, View, Image, TouchableOpacity, SafeAreaView, useWindowDimensions, TouchableWithoutFeedback, Keyboard, ActivityIndicator } from "react-native";
 import { useState, useMemo, useEffect } from "react";
 import AsyncStorage from "@react-native-async-storage/async-storage";
-import { dummyLibraries } from "./models/Library";
+import { fetchLibrarySpaces } from './services/libraryService';
 import { SearchBar } from "./components/SearchBar";
 import { Ionicons } from '@expo/vector-icons';
 import { router } from "expo-router";
 import { TagType, getTagStyle } from './styles/tags';
 import { FilterBar } from "./components/FilterBar";
-import { FILTER_CATEGORIES } from './components/FilterBar';
 import { colors, spacing } from './styles/theme';
 import { layoutStyles } from './styles/components/layout';
 import { headerStyles } from './styles/components/header';
 import { cardStyles, createCardStyles } from './styles/components/card';
 import { typographyStyles } from './styles/components/typography';
+import { Library } from './models/Library';
 
 const RECENT_SEARCHES_KEY = "recent_searches";
 const MAX_RECENT_SEARCHES = 5;
@@ -22,6 +22,9 @@ export default function Index() {
   const [recentSearches, setRecentSearches] = useState<string[]>([]);
   const [isGridView, setIsGridView] = useState(true);
   const [selectedFilters, setSelectedFilters] = useState<Set<string>>(new Set());
+  const [libraries, setLibraries] = useState<Library[]>([]);
+  const [isLoading, setIsLoading] = useState(true);
+  const [error, setError] = useState<string | null>(null);
 
   const { width: windowWidth } = useWindowDimensions();
   
@@ -30,7 +33,22 @@ export default function Index() {
 
   useEffect(() => {
     loadRecentSearches();
+    loadLibraries();
   }, []);
+
+  const loadLibraries = async () => {
+    try {
+      setIsLoading(true);
+      setError(null);
+      const data = await fetchLibrarySpaces();
+      setLibraries(data);
+    } catch (err) {
+      setError('Failed to load library spaces');
+      console.error('Error loading libraries:', err);
+    } finally {
+      setIsLoading(false);
+    }
+  };
 
   const loadRecentSearches = async () => {
     try {
@@ -90,7 +108,17 @@ export default function Index() {
         next.delete(filter);
       } else {
         Array.from(next).forEach(f => {
-          if (FILTER_CATEGORIES.find(cat => cat.type === type)?.values.includes(f)) {
+          if (type === 'category' && f === filter) {
+            next.delete(f);
+          } else if (type === 'soundLevel' && f === filter) {
+            next.delete(f);
+          } else if (type === 'spaceType' && f === filter) {
+            next.delete(f);
+          } else if (type === 'spaceFeatures' && f === filter) {
+            next.delete(f);
+          } else if (type === 'audienceTypes' && f === filter) {
+            next.delete(f);
+          } else if (type === 'reservationType' && f === filter) {
             next.delete(f);
           }
         });
@@ -102,7 +130,7 @@ export default function Index() {
 
   const filteredLibraries = useMemo(() => {
     const query = searchQuery.toLowerCase();
-    return dummyLibraries.filter((library) => {
+    return libraries.filter((library) => {
       const matchesSearch = 
         library.title.toLowerCase().includes(query) ||
         library.spaceInfo.description.toLowerCase().includes(query) ||
@@ -117,14 +145,42 @@ export default function Index() {
       const matchesFilters = selectedFilters.size === 0 || Array.from(selectedFilters).every(filter => 
         library.spaceInfo.category === filter ||
         library.features.soundLevel.includes(filter) ||
-        library.features.spaceType.includes(filter)
+        library.features.spaceType.includes(filter) ||
+        library.spaceInfo.reservationType === filter
       );
 
       return matchesSearch && matchesFilters;
     });
-  }, [searchQuery, selectedFilters]);
+  }, [searchQuery, selectedFilters, libraries]);
 
   const dynamicStyles = createCardStyles(gridCardSize, listImageSize);
+
+  if (isLoading) {
+    return (
+      <SafeAreaView style={layoutStyles.safeArea}>
+        <View style={[layoutStyles.mainContainer, { justifyContent: 'center', alignItems: 'center' }]}>
+          <ActivityIndicator size="large" color={colors.primary} />
+          <Text style={[typographyStyles.title, { marginTop: spacing.sm }]}>Loading...</Text>
+        </View>
+      </SafeAreaView>
+    );
+  }
+
+  if (error) {
+    return (
+      <SafeAreaView style={layoutStyles.safeArea}>
+        <View style={[layoutStyles.mainContainer, { justifyContent: 'center', alignItems: 'center' }]}>
+          <Text style={[typographyStyles.title, { color: colors.error }]}>Error: {error}</Text>
+          <TouchableOpacity 
+            style={[headerStyles.viewToggle, { marginTop: spacing.md }]}
+            onPress={loadLibraries}
+          >
+            <Text style={{ color: colors.primary }}>Retry</Text>
+          </TouchableOpacity>
+        </View>
+      </SafeAreaView>
+    );
+  }
 
   return (
     <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
@@ -136,9 +192,9 @@ export default function Index() {
               <SearchBar 
                 value={searchQuery}
                 onChangeText={handleSearch}
+                onSubmit={handleSubmitSearch}
                 recentSearches={recentSearches}
                 onSelectRecent={handleSelectRecent}
-                onSubmit={handleSubmitSearch}
                 onClearRecent={handleClearRecent}
               />
               <TouchableOpacity 
@@ -155,6 +211,7 @@ export default function Index() {
             <FilterBar
               selectedFilters={selectedFilters}
               onToggleFilter={handleToggleFilter}
+              libraries={libraries}
             />
           </View>
 
@@ -173,14 +230,11 @@ export default function Index() {
                   >
                     <View style={isGridView ? null : dynamicStyles.listImageContainer}>
                       <Image
-                        source={{ uri: library.imageUrl }}
+                        source={library.imageUrl ? { uri: library.imageUrl } : require('../assets/images/placeholder.avif')}
                         style={
-                          library.imageUrl ? 
-                            (isGridView ? dynamicStyles.gridImage : dynamicStyles.listImage) : 
-                            (isGridView ? dynamicStyles.gridPlaceholder : dynamicStyles.listPlaceholder)
+                          isGridView ? dynamicStyles.gridImage : dynamicStyles.listImage
                         }
-                        defaultSource={require('../assets/images/placeholder.png')}
-                        resizeMode={library.imageUrl ? "cover" : "contain"}
+                        resizeMode="cover"
                       />
                     </View>
                     <View style={cardStyles.cardContent}>
@@ -189,7 +243,7 @@ export default function Index() {
                       {!isGridView && (
                         <Text 
                           style={typographyStyles.description} 
-                          numberOfLines={3}
+                          numberOfLines={2}
                         >
                           {library.spaceInfo.description}
                         </Text>
@@ -197,6 +251,9 @@ export default function Index() {
                       <View style={layoutStyles.tags}>
                         <Text style={[layoutStyles.tag, getTagStyle('category')]}>
                           {library.spaceInfo.category}
+                        </Text>
+                        <Text style={[layoutStyles.tag, getTagStyle('reservationType')]}>
+                          {library.spaceInfo.reservationType}
                         </Text>
                         <Text style={[layoutStyles.tag, getTagStyle('soundLevel')]}>
                           {library.features.soundLevel[0]}
