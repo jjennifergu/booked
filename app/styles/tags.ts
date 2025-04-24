@@ -21,6 +21,10 @@ export const TAG_STYLES = {
     backgroundColor: '#E0F2F1',
     color: '#00695C',
   },
+  reservationType: {
+    backgroundColor: '#FFEBEE',
+    color: '#C62828',
+  },
 } as const;
 
 export type TagType = keyof typeof TAG_STYLES;
@@ -58,6 +62,11 @@ export const getTagStyle = (type: TagType) => {
       return {
         backgroundColor: themeColors.bark[50],
         color: themeColors.bark[800],
+      };
+    case 'reservationType':
+      return {
+        backgroundColor: themeColors.mocha[100],
+        color: themeColors.mocha[800],
       };
   };
 }; 

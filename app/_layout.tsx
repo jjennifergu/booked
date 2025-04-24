@@ -1,8 +1,13 @@
 import { Stack } from "expo-router";
+import { colors } from './styles/theme';
 
 export default function Layout() {
   return (
-    <Stack>
+    <Stack
+      screenOptions={{
+        headerTintColor: colors.primary,
+      }}
+    >
       <Stack.Screen 
         name="index" 
         options={{

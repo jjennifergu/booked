@@ -70,6 +70,18 @@ export const themeColors = {
     200: '#FBFAF6',
     100: '#FDFCFA',
     50: '#FEFEFE',
+  },
+  mocha: {
+    900: '#5D4037',
+    800: '#795548',
+    700: '#8D6E63',
+    600: '#A1887F',
+    500: '#BCAAA4',
+    400: '#D7CCC8',
+    300: '#EFEBE9',
+    200: '#F5F5F5',
+    100: '#FAFAFA',
+    50: '#FFFFFF',
   }
 };
 
@@ -92,6 +104,8 @@ export const colors = {
   warningLight: '#FDF3E4',
   info: '#2E7DAB',
   infoLight: '#E5F2F9',
+  error: '#DC2626',
+  errorLight: '#FEE2E2',
 };
 
 export const shadows = {
