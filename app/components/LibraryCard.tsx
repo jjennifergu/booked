@@ -95,7 +95,7 @@ export function LibraryCard({ library, onPress, isGridView, gridCardSize = 0, li
                   (isGridView ? dynamicStyles.gridImage : dynamicStyles.listImage) : 
                   (isGridView ? dynamicStyles.gridPlaceholder : dynamicStyles.listPlaceholder)
               }
-              defaultSource={require('../../assets/images/placeholder.png')}
+              defaultSource={require('../../assets/images/placeholder.avif')}
               resizeMode={library.imageUrl ? "cover" : "contain"}
             />
           </View>
