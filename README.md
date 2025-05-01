@@ -1,13 +1,18 @@
-# 📚 Booked: Cornell Library & Study Space Finder
+# Booked – Cornell Libraries
+
+<p align="center">
+  <img src="https://github.com/user-attachments/assets/f9aca7bd-8fcf-476c-9bb5-83d71e22139d" alt="booked-icon-512x" width="200"/>
+</p>
+
 Booked is a mobile app built to help Cornell students easily browse and reserve study spaces across campus. Designed with usability and accessibility in mind, Booked integrates with Cornell’s official reservation systems to streamline the process of finding and booking library rooms.
 
 Maintained by [Cornell AppDev](https://www.cornellappdev.com/).
 
 # Preview
-<img src="https://github.com/user-attachments/assets/583bf5aa-a77d-4250-b04a-4afa9c634f25" alt="booked-ss1" width="240"/>
-<img src="https://github.com/user-attachments/assets/62d3e23a-76f8-46c7-ba87-2be6a55cdbca" alt="booked-ss2" width="240"/>
-<img src="https://github.com/user-attachments/assets/4a2bbe96-6f4e-45cb-986a-fffd0a50b079" alt="booked-ss3" width="240"/>
-<img src="https://github.com/user-attachments/assets/e6e6a3e4-dee1-4d73-8ed9-a3a09ab0e57c" alt="booked-ss4" width="240"/>
+<img src="https://github.com/user-attachments/assets/583bf5aa-a77d-4250-b04a-4afa9c634f25" alt="booked-ss1" width="160"/>
+<img src="https://github.com/user-attachments/assets/62d3e23a-76f8-46c7-ba87-2be6a55cdbca" alt="booked-ss2" width="160"/>
+<img src="https://github.com/user-attachments/assets/4a2bbe96-6f4e-45cb-986a-fffd0a50b079" alt="booked-ss3" width="160"/>
+<img src="https://github.com/user-attachments/assets/e6e6a3e4-dee1-4d73-8ed9-a3a09ab0e57c" alt="booked-ss4" width="160"/>
 
 
 # 🚀 Features
