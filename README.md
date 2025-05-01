@@ -1,50 +1,54 @@
-# Welcome to your Expo app 👋
+# 📚 Booked: Cornell Library & Study Space Finder
+Booked is a mobile app built to help Cornell students easily browse and reserve study spaces across campus. Designed with usability and accessibility in mind, Booked integrates with Cornell’s official reservation systems to streamline the process of finding and booking library rooms.
 
-This is an [Expo](https://expo.dev) project created with [`create-expo-app`](https://www.npmjs.com/package/create-expo-app).
+Maintained by [Cornell AppDev](https://www.cornellappdev.com/).
 
-## Get started
+# Preview
+<img src="https://github.com/user-attachments/assets/583bf5aa-a77d-4250-b04a-4afa9c634f25" alt="booked-ss1" width="240"/>
+<img src="https://github.com/user-attachments/assets/62d3e23a-76f8-46c7-ba87-2be6a55cdbca" alt="booked-ss2" width="240"/>
+<img src="https://github.com/user-attachments/assets/4a2bbe96-6f4e-45cb-986a-fffd0a50b079" alt="booked-ss3" width="240"/>
+<img src="https://github.com/user-attachments/assets/e6e6a3e4-dee1-4d73-8ed9-a3a09ab0e57c" alt="booked-ss4" width="240"/>
 
-1. Install dependencies
 
-   ```bash
-   npm install
-   ```
+# 🚀 Features
+- 🔍 Library Explorer View with list/grid toggle
+- 🎯 Filter & Search by noise level, features, space type, and more
+- 📄 Detailed Space Pages with photos, amenities, and reservation info
+- 🔗 Direct Reservation Routing through in-app browser
+- 🗺️ Google Maps Integration for live navigation to any study spot
 
-2. Start the app
+# 🧰 Tech Stack
+## Frontend
+- React + Expo (React Native)
+- React Context & Hooks for state management
+- Google Maps JavaScript API
+- Figma (for UI/UX design)
 
-   ```bash
-    npx expo start
-   ```
+## Backend
+- TypeScript
+- API client that fetches and normalizes data from Cornell Library API
 
-In the output, you'll find options to open the app in a
+# 📱 Try It Out
+- iOS: [App Store Listing](https://apps.apple.com/us/app/booked-cornell-libraries/id6745230909)
+- Android: [Play Store Listing](https://play.google.com/store/apps/details?id=com.cornellappdev.booked)
 
-- [development build](https://docs.expo.dev/develop/development-builds/introduction/)
-- [Android emulator](https://docs.expo.dev/workflow/android-studio-emulator/)
-- [iOS simulator](https://docs.expo.dev/workflow/ios-simulator/)
-- [Expo Go](https://expo.dev/go), a limited sandbox for trying out app development with Expo
+# 🛠 Development
+## Prerequisites
+- Node.js & npm
+- Expo CLI
 
-You can start developing by editing the files inside the **app** directory. This project uses [file-based routing](https://docs.expo.dev/router/introduction).
-
-## Get a fresh project
-
-When you're ready, run:
-
-```bash
-npm run reset-project
+## Run Locally
+```
+git clone https://github.com/jjennifergu/booked.git
+cd booked
+npm install
+npx expo start
 ```
 
-This command will move the starter code to the **app-example** directory and create a blank **app** directory where you can start developing.
+## Deployment
+- V1 built and submitted using [Expo EAS](https://docs.expo.dev/deploy/build-project/)
+- Refer to AppDev internal documentation for App Store and Play Store submission guides
 
-## Learn more
+# 📎 Resources
+- 🎨 [Figma Design File](https://www.figma.com/design/UxcbbAZnIegmorPpFbcjkg/Booked?node-id=0-1&t=IwJDSi8oXufQT4rf-1)
 
-To learn more about developing your project with Expo, look at the following resources:
-
-- [Expo documentation](https://docs.expo.dev/): Learn fundamentals, or go into advanced topics with our [guides](https://docs.expo.dev/guides).
-- [Learn Expo tutorial](https://docs.expo.dev/tutorial/introduction/): Follow a step-by-step tutorial where you'll create a project that runs on Android, iOS, and the web.
-
-## Join the community
-
-Join our community of developers creating universal apps.
-
-- [Expo on GitHub](https://github.com/expo/expo): View our open source platform and contribute.
-- [Discord community](https://chat.expo.dev): Chat with Expo users and ask questions.
